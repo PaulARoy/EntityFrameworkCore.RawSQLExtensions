@@ -5,9 +5,9 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace EntityFrameworkCore.RawSQLExtensions.StoredProcedure
+namespace EntityFrameworkCore.RawSQLExtensions
 {
-    public class StoredProcedure<T> : SqlQueryBase<T> where T : class
+    public class StoredProcedure<T> : SqlQueryBase<T>
     {
         private string _storedProcedureName;
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.RawSQLExtensions
 {
-    public class SQLRawQuery<T> : SqlQueryBase<T> where T : class
+    public class SQLRawQuery<T> : SqlQueryBase<T>
     {
         private string _sqlQuery;
 

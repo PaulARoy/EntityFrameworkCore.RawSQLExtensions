@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.RawSQLExtensions
 {
-    public abstract class SqlQueryBase<T> : ISqlQuery<T> where T : class
+    public abstract class SqlQueryBase<T> : ISqlQuery<T>
     {
         protected DatabaseFacade _databaseFacade;
         protected SqlParameter[] _sqlParameters;
@@ -40,12 +40,20 @@ namespace EntityFrameworkCore.RawSQLExtensions
 
         public async Task<T> FirstAsync()
         {
-            return await FirstOrDefaultAsync() ?? throw new InvalidOperationException("Sequence contains no elements");
+            var result = await FirstOrDefaultAsync();
+            if (result == null)
+                throw new InvalidOperationException("Sequence contains no elements");
+
+            return result;
         }
 
         public async Task<T> SingleAsync()
         {
-            return await SingleOrDefaultAsync() ?? throw new InvalidOperationException("Sequence contains no elements");
+            var result = await SingleOrDefaultAsync();
+            if (result == null)
+                throw new InvalidOperationException("Sequence contains no elements");
+
+            return result;
         }
 
         #endregion

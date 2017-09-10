@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.RawSQLExtensions
 {
-    public interface ISqlQuery<T> where T : class
+    public interface ISqlQuery<T>
     {
         Task<IList<T>> ToListAsync();
         

@@ -12,21 +12,22 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
         public static IDictionary<string, DbColumn> GetSchema<T>(this DbDataReader dr)
         {
             var props = typeof(T).GetRuntimeProperties();
+            
             return dr.GetColumnSchema()
                     .Where(x => props.Any(y => y.Name.ToLower() == x.ColumnName.ToLower()))
                     .ToDictionary(key => key.ColumnName.ToLower());
         }
 
-        public static T MapObject<T>(this DbDataReader dr, IDictionary<string, DbColumn> colMapping, IEnumerable<PropertyInfo> props) where T : class
+        public static T MapObject<T>(this DbDataReader dr, IDictionary<string, DbColumn> colMapping, IEnumerable<PropertyInfo> props)
         {
-            T obj = Activator.CreateInstance<T>();
-
-            if (IsSimpleType<T>())
+            if (typeof(T).IsSimpleType())
             {
-                obj = dr.GetValue(0) as T;
+                return (T)dr.GetValue(0);
             }
             else
             {
+                T obj = Activator.CreateInstance<T>();
+
                 foreach (var prop in props)
                 {
                     var propName = prop.Name.ToLower();
@@ -40,12 +41,12 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                         prop.SetValue(obj, null);
                     }
                 }
-            }
 
-            return obj;
+                return obj;
+            }
         }
 
-        public static async Task<IList<T>> ToListAsync<T>(this DbDataReader dr) where T : class
+        public static async Task<IList<T>> ToListAsync<T>(this DbDataReader dr)
         {
             var objList = new List<T>();     
             
@@ -59,7 +60,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             return objList;
         }
 
-        public static async Task<T> FirstOrDefaultAsync<T>(this DbDataReader dr) where T : class
+        public static async Task<T> FirstOrDefaultAsync<T>(this DbDataReader dr)
         {
             var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
@@ -71,7 +72,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             return default(T);
         }
 
-        public static async Task<T> SingleOrDefaultAsync<T>(this DbDataReader dr) where T : class
+        public static async Task<T> SingleOrDefaultAsync<T>(this DbDataReader dr)
         {
             var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
@@ -90,12 +91,6 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 }     
 
             return obj;
-        }
-
-        private static bool IsSimpleType<T>()
-        {
-            var type = typeof(T);
-            return type.IsPrimitive || type.Equals(typeof(string));
         }
     }
 }
