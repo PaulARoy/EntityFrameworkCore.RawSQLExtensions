@@ -36,6 +36,8 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
     {
         #region "Simple Types"
 
+        #region "Schema"
+
         [Test]
         [TestCase((bool)true)]
         [TestCase((sbyte)1)]
@@ -55,6 +57,10 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             var schema = dbReader.GetSchema<T>();
             Assert.AreEqual(schema.Keys.Count, 0);
         }
+
+        #endregion
+
+        #region "MapObject"
 
         [Test]
         [TestCase((bool)true)]
@@ -82,9 +88,19 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 
         #endregion
 
+        #region "ToListAsync, FirstOrDefaultAsync, SingleOrDefaultAsync"
+
+        // TODO
+
+        #endregion
+
+        #endregion
+
 
         #region "Complex Type"
-        
+
+        #region "Schema"
+
         [Test]
         public void GetSchemaFromComplexClass()
         {
@@ -146,6 +162,10 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             Assert.IsFalse(schema.ContainsKey("aditionalproperty"));
             Assert.AreEqual(schema.Keys.Count, 3);
         }
+
+        #endregion
+
+        #region "MapObject"
 
         [Test]
         public void MapObjectMapComplexTypeWithCorrectOrder()
@@ -262,6 +282,14 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             Assert.Throws<System.ArgumentException>(() => dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), 
                                                                                            typeof(ComplexClass).GetRuntimeProperties()));
         }
+
+        #endregion
+
+        #region "ToListAsync, FirstOrDefaultAsync, SingleOrDefaultAsync"
+
+        // TODO
+
+        #endregion
 
         #endregion
 

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.RawSQLExtensions
 {
-    public class SQLRawQuery<T> : SqlQueryBase<T>
+    public class SqlRawQuery<T> : SqlQueryBase<T>
     {
         private string _sqlQuery;
 
-        public SQLRawQuery(DatabaseFacade databaseFacade, string sqlQuery, params SqlParameter[] sqlParameters) : base(databaseFacade, sqlParameters)
+        public SqlRawQuery(DatabaseFacade databaseFacade, string sqlQuery, params SqlParameter[] sqlParameters) : base(databaseFacade, sqlParameters)
         {
             _sqlQuery = sqlQuery;
         }
