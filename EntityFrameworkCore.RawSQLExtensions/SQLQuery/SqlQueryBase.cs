@@ -25,17 +25,17 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
 
         public async Task<IList<T>> ToListAsync()
         {
-            return await ExecuteAsync<IList<T>>((dbReader) => dbReader.ToListAsync<T>());
+            return await ExecuteAsync((dbReader) => dbReader.ToListAsync<T>());
         }
 
         public async Task<T> FirstOrDefaultAsync()
         {
-            return await ExecuteAsync<T>((dbReader) => dbReader.FirstOrDefaultAsync<T>());
+            return await ExecuteAsync((dbReader) => dbReader.FirstOrDefaultAsync<T>());
         }
 
         public async Task<T> SingleOrDefaultAsync()
         {
-            return await ExecuteAsync<T>((dbReader) => dbReader.SingleOrDefaultAsync<T>());
+            return await ExecuteAsync((dbReader) => dbReader.SingleOrDefaultAsync<T>());
         }
 
         public async Task<T> FirstAsync()
