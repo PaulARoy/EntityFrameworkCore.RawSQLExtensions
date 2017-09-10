@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using EntityFrameworkCore.RawSQLExtensions.SqlQuery;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;

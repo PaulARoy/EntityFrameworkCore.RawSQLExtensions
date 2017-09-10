@@ -4,9 +4,6 @@ using NUnit.Framework;
 using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Reflection;
-using System.Linq;
-
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 {

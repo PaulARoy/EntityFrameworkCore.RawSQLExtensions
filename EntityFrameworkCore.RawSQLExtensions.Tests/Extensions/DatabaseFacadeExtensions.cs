@@ -2,6 +2,7 @@
 using FakeItEasy;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using EntityFrameworkCore.RawSQLExtensions.Extensions;
+using EntityFrameworkCore.RawSQLExtensions.SqlQuery;
 using System.Data.SqlClient;
 
 namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions

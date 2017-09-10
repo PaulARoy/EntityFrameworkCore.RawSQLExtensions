@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EntityFrameworkCore.RawSQLExtensions
+namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
 {
     public interface ISqlQuery<T>
     {

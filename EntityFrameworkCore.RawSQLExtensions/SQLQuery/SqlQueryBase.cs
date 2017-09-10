@@ -7,7 +7,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace EntityFrameworkCore.RawSQLExtensions
+namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
 {
     public abstract class SqlQueryBase<T> : ISqlQuery<T>
     {
@@ -61,7 +61,40 @@ namespace EntityFrameworkCore.RawSQLExtensions
 
         #region "Implementation"
 
-        protected abstract Task<U> ExecuteAsync<U>(Func<DbDataReader, Task<U>> databaseReaderAction);
+        // customization of command (sql / stored procedure)
+        protected abstract void InitCommand(DbCommand command);
+
+        private async Task<U> ExecuteAsync<U>(Func<DbDataReader, Task<U>> databaseReaderAction)
+        {
+            U result = default(U);
+
+            var conn = _databaseFacade.GetDbConnection();
+            try
+            {
+                await conn.OpenAsync();
+                using (var command = conn.CreateCommand())
+                {
+                    InitCommand(command);
+
+                    foreach (var param in _sqlParameters)
+                    {
+                        var p = command.CreateParameter();
+                        p.ParameterName = param.ParameterName;
+                        p.Value = param.Value;
+                        command.Parameters.Add(p);
+                    }
+
+                    DbDataReader reader = await command.ExecuteReaderAsync();
+                    result = await databaseReaderAction.Invoke(reader);
+                    reader.Dispose();
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
         
         #endregion
     }
