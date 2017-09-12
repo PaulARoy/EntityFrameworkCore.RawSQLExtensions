@@ -20,7 +20,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
 
         public static T MapObject<T>(this DbDataReader dr, IDictionary<string, DbColumn> colMapping, IEnumerable<PropertyInfo> props)
         {
-            if (typeof(T).IsSimpleType())
+            if (typeof(T).IsSqlSimpleType())
             {
                 return (T)dr.GetValue(0);
             }
