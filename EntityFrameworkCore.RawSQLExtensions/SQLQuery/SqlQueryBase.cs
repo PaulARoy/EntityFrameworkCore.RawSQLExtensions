@@ -56,6 +56,41 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             return result;
         }
 
+
+
+        public IList<T> ToList()
+        {
+            return Execute((dbReader) => dbReader.ToList<T>());
+        }
+
+        public T FirstOrDefault()
+        {
+            return Execute((dbReader) => dbReader.FirstOrDefault<T>());
+        }
+
+        public T SingleOrDefault()
+        {
+            return Execute((dbReader) => dbReader.SingleOrDefault<T>());
+        }
+
+        public T First()
+        {
+            var result = FirstOrDefault();
+            if (result == null)
+                throw new InvalidOperationException("Sequence contains no elements");
+
+            return result;
+        }
+
+        public T Single()
+        {
+            var result = SingleOrDefault();
+            if (result == null)
+                throw new InvalidOperationException("Sequence contains no elements");
+
+            return result;
+        }
+
         #endregion
 
 
@@ -95,7 +130,40 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             }
             return result;
         }
-        
+
+
+        private U Execute<U>(Func<DbDataReader, U> databaseReaderAction)
+        {
+            U result = default(U);
+
+            var conn = _databaseFacade.GetDbConnection();
+            try
+            {
+                conn.Open();
+                using (var command = conn.CreateCommand())
+                {
+                    InitCommand(command);
+
+                    foreach (var param in _sqlParameters)
+                    {
+                        var p = command.CreateParameter();
+                        p.ParameterName = param.ParameterName;
+                        p.Value = param.Value;
+                        command.Parameters.Add(p);
+                    }
+
+                    DbDataReader reader = command.ExecuteReader();
+                    result = databaseReaderAction.Invoke(reader);
+                    reader.Dispose();
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
+
         #endregion
     }
 }

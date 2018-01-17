@@ -2,9 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>EntityFrameworkCore.RawSQLExtensions</Authors>
+    <PackageLicenseUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions</RepositoryUrl>
+    <PackageReleaseNotes>by maikebing</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GitVersionTask" Version="3.6.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
