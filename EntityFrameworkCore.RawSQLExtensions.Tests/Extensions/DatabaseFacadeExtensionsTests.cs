@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 {
     [TestFixture]
-    public class DatabaseFacadeExtensions
+    public class DatabaseFacadeExtensionsTests
     {
         [Test]
         public void SqlQueryReturnsSqlRawQuery()

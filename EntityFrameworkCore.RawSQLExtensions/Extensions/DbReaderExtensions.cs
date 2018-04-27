@@ -59,6 +59,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
 
             return objList;
         }
+
         public static IList<T> ToList<T>(this DbDataReader dr)
         {
             var objList = new List<T>();
@@ -117,8 +118,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
 
             return obj;
         }
-
-
+        
         public static T SingleOrDefault<T>(this DbDataReader dr)
         {
             var props = typeof(T).GetRuntimeProperties();
