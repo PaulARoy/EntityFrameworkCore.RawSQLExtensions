@@ -161,7 +161,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
 
             return obj;
         }
-
+        
         public static T SingleOrDefault<T>(this DbDataReader dr)
         {
             var props = typeof(T).GetRuntimeProperties();
