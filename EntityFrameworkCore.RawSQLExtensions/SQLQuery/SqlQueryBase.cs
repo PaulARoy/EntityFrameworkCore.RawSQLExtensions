@@ -66,9 +66,9 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             return Execute((dbReader) => dbReader.ToDataTable());
         }
 
-        public Task<DataTable> ToDataTableAsync()
+        public async Task<DataTable> ToDataTableAsync()
         {
-            return Execute((dbReader) => dbReader.ToDataTableAsync());
+            return await ExecuteAsync((dbReader) => dbReader.ToDataTableAsync());
         }
 
         public T FirstOrDefault()
