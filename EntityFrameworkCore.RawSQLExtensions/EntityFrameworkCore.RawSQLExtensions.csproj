@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>PaulARoy</Authors>
-    <PackageLicenseUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions</RepositoryUrl>
     <PackageReleaseNotes>by maikebing</PackageReleaseNotes>
@@ -12,12 +12,20 @@
     <Description>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions</Description>
     <AssemblyVersion>1.0.0.10</AssemblyVersion>
     <FileVersion>1.0.0.10</FileVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   
   

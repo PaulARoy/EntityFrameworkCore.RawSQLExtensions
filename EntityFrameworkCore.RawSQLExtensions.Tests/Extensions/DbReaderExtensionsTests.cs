@@ -79,7 +79,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 
             var obj = dbReader.MapObject<T>(null, null);
 
-            A.CallTo(() => dbReader.GetValue(0)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dbReader.GetValue(0)).MustHaveHappened();
             Assert.AreEqual(instance, obj);
         }
 

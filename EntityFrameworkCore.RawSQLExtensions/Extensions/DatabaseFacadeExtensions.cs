@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -12,6 +13,12 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
         public static ISqlQuery<object> SqlQuery(this DatabaseFacade database, Type type, string sqlQuery, params SqlParameter[] parameters)
         {
             var tsrq = typeof(SqlRawQuery<>).MakeGenericType(type);
+            return (ISqlQuery<object>)Activator.CreateInstance(tsrq, database, sqlQuery, parameters);
+        }
+
+        public static ISqlQuery<object> SqlQuery(this DatabaseFacade database, string sqlQuery, params SqlParameter[] parameters)
+        {
+            var tsrq = typeof(SqlRawQuery<>).MakeGenericType(typeof(object));
             return (ISqlQuery<object>)Activator.CreateInstance(tsrq, database, sqlQuery, parameters);
         }
 

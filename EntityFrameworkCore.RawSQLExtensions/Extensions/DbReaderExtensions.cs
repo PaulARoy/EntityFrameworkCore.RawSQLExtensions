@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
@@ -72,6 +73,48 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                     objList.Add(dr.MapObject<T>(colMapping, props));
 
             return objList;
+        }
+
+        public static DataTable ToDataTable(this DbDataReader dr)
+        {
+            DataTable objDataTable = new DataTable();
+            for (int intCounter = 0; intCounter < dr.FieldCount; ++intCounter)
+            {
+                objDataTable.Columns.Add(dr.GetName(intCounter), dr.GetFieldType(intCounter));
+            }
+            if (dr.HasRows)
+            {
+                objDataTable.BeginLoadData();
+                object[] objValues = new object[dr.FieldCount];
+                while (dr.Read())
+                {
+                    dr.GetValues(objValues);
+                    objDataTable.LoadDataRow(objValues, true);
+                }
+                objDataTable.EndLoadData();
+            }
+            return objDataTable;
+        }
+
+        public static async Task<DataTable> ToDataTableAsync(this DbDataReader dr)
+        {
+            DataTable objDataTable = new DataTable();
+            for (int intCounter = 0; intCounter < dr.FieldCount; ++intCounter)
+            {
+                objDataTable.Columns.Add(dr.GetName(intCounter), dr.GetFieldType(intCounter));
+            }
+            if (dr.HasRows)
+            {
+                objDataTable.BeginLoadData();
+                object[] objValues = new object[dr.FieldCount];
+                while (await dr.ReadAsync())
+                {
+                    dr.GetValues(objValues);
+                    objDataTable.LoadDataRow(objValues, true);
+                }
+                objDataTable.EndLoadData();
+            }
+            return objDataTable;
         }
 
         public static async Task<T> FirstOrDefaultAsync<T>(this DbDataReader dr)

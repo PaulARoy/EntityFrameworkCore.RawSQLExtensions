@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
@@ -8,17 +9,25 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
         Task<IList<T>> ToListAsync();
 
         Task<T> FirstAsync();
+
         Task<T> FirstOrDefaultAsync();
 
         Task<T> SingleAsync();
+
         Task<T> SingleOrDefaultAsync();
 
         IList<T> ToList();
 
         T First();
+
         T FirstOrDefault();
 
         T Single();
+
         T SingleOrDefault();
+
+        DataTable ToDataTable();
+
+        Task<DataTable> ToDataTableAsync();
     }
 }

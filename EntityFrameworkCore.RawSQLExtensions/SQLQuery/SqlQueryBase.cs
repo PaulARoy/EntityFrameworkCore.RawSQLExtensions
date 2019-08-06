@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -19,7 +20,6 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             _databaseFacade = databaseFacade;
             _sqlParameters = sqlParameters;
         }
-
 
         #region "ISQLQuery<T>"
 
@@ -56,11 +56,19 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             return result;
         }
 
-
-
         public IList<T> ToList()
         {
             return Execute((dbReader) => dbReader.ToList<T>());
+        }
+
+        public DataTable ToDataTable()
+        {
+            return Execute((dbReader) => dbReader.ToDataTable());
+        }
+
+        public async Task<DataTable> ToDataTableAsync()
+        {
+            return await ExecuteAsync((dbReader) => dbReader.ToDataTableAsync());
         }
 
         public T FirstOrDefault()
@@ -91,8 +99,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             return result;
         }
 
-        #endregion
-
+        #endregion "ISQLQuery<T>"
 
         #region "Implementation"
 
@@ -131,7 +138,6 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             return result;
         }
 
-
         private U Execute<U>(Func<DbDataReader, U> databaseReaderAction)
         {
             U result = default(U);
@@ -139,7 +145,10 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             var conn = _databaseFacade.GetDbConnection();
             try
             {
-                conn.Open();
+                if (conn.State != ConnectionState.Open)
+                {
+                    conn.Open();
+                }
                 using (var command = conn.CreateCommand())
                 {
                     InitCommand(command);
@@ -164,6 +173,6 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
             return result;
         }
 
-        #endregion
+        #endregion "Implementation"
     }
 }
