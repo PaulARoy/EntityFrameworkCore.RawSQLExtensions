@@ -3,16 +3,21 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>PaulARoy</Authors>
+    <Authors>Paul Roy</Authors>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions</RepositoryUrl>
-    <PackageReleaseNotes>by maikebing</PackageReleaseNotes>
-    <Company>PaulARoy</Company>
-    <Description>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions</Description>
-    <AssemblyVersion>1.0.0.10</AssemblyVersion>
-    <FileVersion>1.0.0.10</FileVersion>
+    <PackageProjectUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions</RepositoryUrl>
+    <PackageReleaseNotes>by PaulARoy</PackageReleaseNotes>
+    <Company>Paul Roy</Company>
+    <Description>Extensions to support raw SQL and stored procedures with custom entities mapping</Description>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.0.2</Version>
+    <Copyright>Copyright ©2019 Paul Roy</Copyright>
+    <PackageTags>entity framework entityframework core raw sql procedure query efcore</PackageTags>
+    <PackageIconUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions/EntityFrameworkCore.RawSQLExtensions/nuget_icon.png</PackageIconUrl>
+    <RepositoryType>Integrating maikebing pull request</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

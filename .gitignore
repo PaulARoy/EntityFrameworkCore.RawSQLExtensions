@@ -259,3 +259,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/nuget.exe
+/nuget_icon_basic.png
+/EntityFrameworkCore.RawSQLExtensions/nuget.exe
+/EntityFrameworkCore.RawSQLExtensions/EntityFrameworkCore.RawSQLExtensions.nuspec
