@@ -3,20 +3,25 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>PaulARoy,maikebing</Authors>
+    <Authors>Paul Roy</Authors>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions</RepositoryUrl>
-    <PackageReleaseNotes>by maikebing</PackageReleaseNotes>
-    <Version>1.1.0</Version>
-    <Company>PaulARoy</Company>
-    <Description>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions</Description>
+    <PackageProjectUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions</RepositoryUrl>
+    <PackageReleaseNotes>by PaulARoy</PackageReleaseNotes>
+    <Company>Paul Roy</Company>
+    <Description>Extensions to support raw SQL and stored procedures with custom entities mapping</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.1.2</Version>
+    <Copyright>Copyright ©2019 Paul Roy</Copyright>
+    <PackageTags>entity framework entityframework core raw sql procedure query efcore</PackageTags>
+    <PackageIconUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions/EntityFrameworkCore.RawSQLExtensions/nuget_icon.png</PackageIconUrl>
+    <RepositoryType>Integrating maikebing pull request</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -24,10 +29,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
   
   

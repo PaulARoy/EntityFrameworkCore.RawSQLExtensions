@@ -51,6 +51,8 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
         {
             Assert.AreEqual(expectedResult, type.IsSqlSimpleType());
         }
+
+        [Test]
         [TestCase(typeof(object), false)]
         [TestCase(typeof(SimpleClass), false)]
         [TestCase(typeof((string x,string y,int z)), true)]
