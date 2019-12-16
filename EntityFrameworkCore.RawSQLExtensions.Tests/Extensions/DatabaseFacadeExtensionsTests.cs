@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using EntityFrameworkCore.RawSQLExtensions.Extensions;
 using EntityFrameworkCore.RawSQLExtensions.SqlQuery;
 using System.Data.SqlClient;
+using System.Data.Common;
 
 namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 {

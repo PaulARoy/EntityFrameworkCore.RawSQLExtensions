@@ -1,10 +1,10 @@
 ﻿using EntityFrameworkCore.RawSQLExtensions.Extensions;
 using FakeItEasy;
 using NUnit.Framework;
+using System;
 using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Reflection;
-
 namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 {
     public class CustomDbColumn : DbColumn
@@ -77,7 +77,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             var dbReader = A.Fake<DbDataReader>();
             A.CallTo(() => dbReader.GetValue(0)).Returns(instance);
 
-            var obj = dbReader.MapObject<T>(null, null);
+            var obj = dbReader.MapObject<T>(null);
 
             A.CallTo(() => dbReader.GetValue(0)).MustHaveHappened();
             Assert.AreEqual(instance, obj);
@@ -180,7 +180,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns(12);
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
 
-            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), typeof(ComplexClass).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -203,7 +203,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns(12);
             A.CallTo(() => dbReader.GetValue(0)).Returns(true);
 
-            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), typeof(ComplexClass).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -228,7 +228,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
             A.CallTo(() => dbReader.GetValue(3)).Returns("additional");
 
-            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), typeof(ComplexClass).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -251,8 +251,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns(12);
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
 
-            var obj = dbReader.MapObject<ComplexClassWithAdditionalProperty>(dbReader.GetSchema<ComplexClassWithAdditionalProperty>(),
-                                                                             typeof(ComplexClassWithAdditionalProperty).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClassWithAdditionalProperty>(dbReader.GetSchema<ComplexClassWithAdditionalProperty>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -276,8 +275,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns("12");
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
 
-            Assert.Throws<System.ArgumentException>(() => dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), 
-                                                                                           typeof(ComplexClass).GetRuntimeProperties()));
+            Assert.Throws<System.ArgumentException>(() => dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>()));
         }
 
         #endregion
@@ -289,6 +287,26 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
         #endregion
 
         #endregion
+        [Test]
+        public void  ReadValueFromTulp()
+        {
+            var dbReader = A.Fake<DbDataReader>(opts => opts.Implements<IDbColumnSchemaGenerator>());
+            var dataColumn = new ReadOnlyCollection<DbColumn>(
+                new DbColumn[] {
+                    new CustomDbColumn("id",0),
+                    new CustomDbColumn("index", 1),
+                    new CustomDbColumn("dt", 2),
+                });
 
+            A.CallTo(() => ((IDbColumnSchemaGenerator)dbReader).GetColumnSchema()).Returns(dataColumn);
+            A.CallTo(() => dbReader.GetValue(0)).Returns("string");
+            A.CallTo(() => dbReader.GetValue(1)).Returns(1);
+            var dtx = DateTime.Now;
+            A.CallTo(() => dbReader.GetValue(2)).Returns(dtx);
+           var obj= dbReader.MapObject<(string id, int index, DateTime dt)>( dbReader.GetSchema< (string id, int index, DateTime dt)>());
+            Assert.AreEqual("string", obj.id);
+            Assert.AreEqual(1, obj.index);
+            Assert.AreEqual(dtx, obj.dt);
+        }
     }
 }

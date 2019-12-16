@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
@@ -13,9 +12,9 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
     public abstract class SqlQueryBase<T> : ISqlQuery<T>
     {
         protected DatabaseFacade _databaseFacade;
-        protected SqlParameter[] _sqlParameters;
+        protected DbParameter[] _sqlParameters;
 
-        public SqlQueryBase(DatabaseFacade databaseFacade, params SqlParameter[] sqlParameters)
+        public SqlQueryBase(DatabaseFacade databaseFacade, params DbParameter[] sqlParameters)
         {
             _databaseFacade = databaseFacade;
             _sqlParameters = sqlParameters;
