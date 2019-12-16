@@ -51,5 +51,13 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
         {
             Assert.AreEqual(expectedResult, type.IsSqlSimpleType());
         }
+        [TestCase(typeof(object), false)]
+        [TestCase(typeof(SimpleClass), false)]
+        [TestCase(typeof((string x,string y,int z)), true)]
+        [TestCase(typeof((string x,DateTime dt)), true)]
+        public void ExpectedIsTupleType(Type type, bool expectedResult)
+        {
+            Assert.AreEqual(expectedResult, type.IsTupleType());
+        }
     }
 }

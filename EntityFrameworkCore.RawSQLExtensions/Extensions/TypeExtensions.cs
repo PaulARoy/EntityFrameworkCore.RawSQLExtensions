@@ -15,5 +15,50 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                    t.Equals(typeof(Guid)) ||
                    t.Equals(typeof(byte[])) || t.Equals(typeof(char[]));
         }
+        public static bool IsTupleType(this  Type type, bool checkBaseTypes = false)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (type == typeof(Tuple))
+                return true;
+            if (type == typeof(ValueTuple))
+                return true;
+       
+            while (type != null)
+            {
+                if (type.IsGenericType)
+                {
+                    var genType = type.GetGenericTypeDefinition();
+                    if (genType == typeof(Tuple<>)
+                        || genType == typeof(Tuple<,>)
+                        || genType == typeof(Tuple<,,>)
+                        || genType == typeof(Tuple<,,,>)
+                        || genType == typeof(Tuple<,,,,>)
+                        || genType == typeof(Tuple<,,,,,>)
+                        || genType == typeof(Tuple<,,,,,,>)
+                        || genType == typeof(Tuple<,,,,,,,>)
+                        || genType == typeof(Tuple<,,,,,,,>))
+                        return true;
+                    if (genType == typeof(ValueTuple<>)
+                      || genType == typeof(ValueTuple<,>)
+                      || genType == typeof(ValueTuple<,,>)
+                      || genType == typeof(ValueTuple<,,,>)
+                      || genType == typeof(ValueTuple<,,,,>)
+                      || genType == typeof(ValueTuple<,,,,,>)
+                      || genType == typeof(ValueTuple<,,,,,,>)
+                      || genType == typeof(ValueTuple<,,,,,,,>)
+                      || genType == typeof(ValueTuple<,,,,,,,>))
+                        return true;
+                }
+
+                if (!checkBaseTypes)
+                    break;
+
+                type = type.BaseType;
+            }
+
+            return false;
+        }
     }
 }

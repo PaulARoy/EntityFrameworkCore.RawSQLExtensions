@@ -13,7 +13,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
         public static IDictionary<string, DbColumn> GetSchema<T>(this DbDataReader dr)
         {
             IDictionary<string, DbColumn> valuePairs;
-            if (IsTupleType(typeof(T)))
+            if (typeof(T).IsTupleType())
             {
                 var props = typeof(T).GetRuntimeFields();
                 valuePairs = dr.GetColumnSchema()
@@ -29,39 +29,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             }
             return valuePairs;
         }
-        public static bool IsTupleType(Type type, bool checkBaseTypes = false)
-        {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-
-            if (type == typeof(Tuple))
-                return true;
-
-            while (type != null)
-            {
-                if (type.IsGenericType)
-                {
-                    var genType = type.GetGenericTypeDefinition();
-                    if (genType == typeof(Tuple<>)
-                        || genType == typeof(Tuple<,>)
-                        || genType == typeof(Tuple<,,>)
-                        || genType == typeof(Tuple<,,,>)
-                        || genType == typeof(Tuple<,,,,>)
-                        || genType == typeof(Tuple<,,,,,>)
-                        || genType == typeof(Tuple<,,,,,,>)
-                        || genType == typeof(Tuple<,,,,,,,>)
-                        || genType == typeof(Tuple<,,,,,,,>))
-                        return true;
-                }
-
-                if (!checkBaseTypes)
-                    break;
-
-                type = type.BaseType;
-            }
-
-            return false;
-        }
+      
         public static T MapObject<T>(this DbDataReader dr, IDictionary<string, DbColumn> colMapping)
         {
             if (typeof(T).IsSqlSimpleType())
@@ -71,7 +39,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             else
             {
                 T obj = Activator.CreateInstance<T>();
-                if (IsTupleType(typeof(T)))
+                if (typeof(T).IsTupleType())
                 {
                     var fields = typeof(T).GetRuntimeFields();
                     foreach (var prop in fields)
