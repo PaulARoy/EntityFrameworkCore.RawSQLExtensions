@@ -8,10 +8,9 @@
     <PackageProjectUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/maikebing/EntityFrameworkCore.RawSQLExtensions</RepositoryUrl>
     <PackageReleaseNotes>by maikebing</PackageReleaseNotes>
+    <Version>1.1.0</Version>
     <Company>PaulARoy</Company>
     <Description>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions</Description>
-    <AssemblyVersion>1.0.0.10</AssemblyVersion>
-    <FileVersion>1.0.0.10</FileVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
