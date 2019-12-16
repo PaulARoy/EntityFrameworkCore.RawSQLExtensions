@@ -12,14 +12,57 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
     {
         public static IDictionary<string, DbColumn> GetSchema<T>(this DbDataReader dr)
         {
-            var props = typeof(T).GetRuntimeProperties();
-
-            return dr.GetColumnSchema()
-                    .Where(x => props.Any(y => y.Name.ToLower() == x.ColumnName.ToLower()))
-                    .ToDictionary(key => key.ColumnName.ToLower());
+            IDictionary<string, DbColumn> valuePairs;
+            if (IsTupleType(typeof(T)))
+            {
+                var props = typeof(T).GetRuntimeFields();
+                valuePairs = dr.GetColumnSchema()
+               .Where(x => props.Any(y => y.Name.ToLower() == x.ColumnName.ToLower()))
+               .ToDictionary(key => key.ColumnName.ToLower());
+            }
+           else
+            {
+                var props = typeof(T).GetRuntimeProperties();
+                valuePairs = dr.GetColumnSchema()
+               .Where(x => props.Any(y => y.Name.ToLower() == x.ColumnName.ToLower()))
+               .ToDictionary(key => key.ColumnName.ToLower());
+            }
+            return valuePairs;
         }
+        public static bool IsTupleType(Type type, bool checkBaseTypes = false)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
 
-        public static T MapObject<T>(this DbDataReader dr, IDictionary<string, DbColumn> colMapping, IEnumerable<PropertyInfo> props)
+            if (type == typeof(Tuple))
+                return true;
+
+            while (type != null)
+            {
+                if (type.IsGenericType)
+                {
+                    var genType = type.GetGenericTypeDefinition();
+                    if (genType == typeof(Tuple<>)
+                        || genType == typeof(Tuple<,>)
+                        || genType == typeof(Tuple<,,>)
+                        || genType == typeof(Tuple<,,,>)
+                        || genType == typeof(Tuple<,,,,>)
+                        || genType == typeof(Tuple<,,,,,>)
+                        || genType == typeof(Tuple<,,,,,,>)
+                        || genType == typeof(Tuple<,,,,,,,>)
+                        || genType == typeof(Tuple<,,,,,,,>))
+                        return true;
+                }
+
+                if (!checkBaseTypes)
+                    break;
+
+                type = type.BaseType;
+            }
+
+            return false;
+        }
+        public static T MapObject<T>(this DbDataReader dr, IDictionary<string, DbColumn> colMapping)
         {
             if (typeof(T).IsSqlSimpleType())
             {
@@ -28,35 +71,55 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             else
             {
                 T obj = Activator.CreateInstance<T>();
-
-                foreach (var prop in props)
+                if (IsTupleType(typeof(T)))
                 {
-                    var propName = prop.Name.ToLower();
-                    if (colMapping.ContainsKey(propName))
+                    var fields = typeof(T).GetRuntimeFields();
+                    foreach (var prop in fields)
                     {
-                        var val = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
-                        prop.SetValue(obj, val == DBNull.Value ? null : val);
+                        var propName = prop.Name.ToLower();
+                        if (colMapping.ContainsKey(propName))
+                        {
+                            var val = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
+                            prop.SetValue(obj, val == DBNull.Value ? null : val);
+                        }
+                        else
+                        {
+                            prop.SetValue(obj, null);
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    IEnumerable<PropertyInfo> props = typeof(T).GetRuntimeProperties();
+                    foreach (var prop in props)
                     {
-                        prop.SetValue(obj, null);
+                        var propName = prop.Name.ToLower();
+                        if (colMapping.ContainsKey(propName))
+                        {
+                            var val = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
+                            prop.SetValue(obj, val == DBNull.Value ? null : val);
+                        }
+                        else
+                        {
+                            prop.SetValue(obj, null);
+                        }
                     }
                 }
 
                 return obj;
             }
         }
+     
 
         public static async Task<IList<T>> ToListAsync<T>(this DbDataReader dr)
         {
             var objList = new List<T>();
 
-            var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
 
             if (dr.HasRows)
                 while (await dr.ReadAsync())
-                    objList.Add(dr.MapObject<T>(colMapping, props));
+                    objList.Add(dr.MapObject<T>(colMapping));
 
             return objList;
         }
@@ -64,13 +127,10 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
         public static IList<T> ToList<T>(this DbDataReader dr)
         {
             var objList = new List<T>();
-
-            var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
-
             if (dr.HasRows)
                 while (dr.Read())
-                    objList.Add(dr.MapObject<T>(colMapping, props));
+                    objList.Add(dr.MapObject<T>(colMapping));
 
             return objList;
         }
@@ -119,31 +179,26 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
 
         public static async Task<T> FirstOrDefaultAsync<T>(this DbDataReader dr)
         {
-            var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
-
             if (dr.HasRows)
                 while (await dr.ReadAsync())
-                    return dr.MapObject<T>(colMapping, props);
+                    return dr.MapObject<T>(colMapping);
 
             return default(T);
         }
 
         public static T FirstOrDefault<T>(this DbDataReader dr)
         {
-            var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
-
             if (dr.HasRows)
                 while (dr.Read())
-                    return dr.MapObject<T>(colMapping, props);
+                    return dr.MapObject<T>(colMapping);
 
             return default(T);
         }
 
         public static async Task<T> SingleOrDefaultAsync<T>(this DbDataReader dr)
         {
-            var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
 
             T obj = default(T);
@@ -155,7 +210,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                     if (hasResult)
                         throw new InvalidOperationException("Sequence contains more than one matching element");
 
-                    obj = dr.MapObject<T>(colMapping, props);
+                    obj = dr.MapObject<T>(colMapping);
                     hasResult = true;
                 }
 
@@ -164,9 +219,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
         
         public static T SingleOrDefault<T>(this DbDataReader dr)
         {
-            var props = typeof(T).GetRuntimeProperties();
             var colMapping = dr.GetSchema<T>();
-
             T obj = default(T);
             bool hasResult = false;
 
@@ -176,7 +229,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                     if (hasResult)
                         throw new InvalidOperationException("Sequence contains more than one matching element");
 
-                    obj = dr.MapObject<T>(colMapping, props);
+                    obj = dr.MapObject<T>(colMapping);
                     hasResult = true;
                 }
 

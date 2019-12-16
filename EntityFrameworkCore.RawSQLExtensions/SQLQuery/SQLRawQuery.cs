@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Data.Common;
-using System.Data.SqlClient;
 
 namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
 {
@@ -8,7 +7,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
     {
         private string _sqlQuery;
 
-        public SqlRawQuery(DatabaseFacade databaseFacade, string sqlQuery, params SqlParameter[] sqlParameters) : base(databaseFacade, sqlParameters)
+        public SqlRawQuery(DatabaseFacade databaseFacade, string sqlQuery, params DbParameter[] sqlParameters) : base(databaseFacade, sqlParameters)
         {
             _sqlQuery = sqlQuery;
         }

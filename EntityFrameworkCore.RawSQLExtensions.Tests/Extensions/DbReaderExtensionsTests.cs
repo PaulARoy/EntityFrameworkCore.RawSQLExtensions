@@ -77,7 +77,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             var dbReader = A.Fake<DbDataReader>();
             A.CallTo(() => dbReader.GetValue(0)).Returns(instance);
 
-            var obj = dbReader.MapObject<T>(null, null);
+            var obj = dbReader.MapObject<T>(null);
 
             A.CallTo(() => dbReader.GetValue(0)).MustHaveHappened();
             Assert.AreEqual(instance, obj);
@@ -180,7 +180,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns(12);
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
 
-            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), typeof(ComplexClass).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -203,7 +203,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns(12);
             A.CallTo(() => dbReader.GetValue(0)).Returns(true);
 
-            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), typeof(ComplexClass).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -228,7 +228,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
             A.CallTo(() => dbReader.GetValue(3)).Returns("additional");
 
-            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), typeof(ComplexClass).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -251,8 +251,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns(12);
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
 
-            var obj = dbReader.MapObject<ComplexClassWithAdditionalProperty>(dbReader.GetSchema<ComplexClassWithAdditionalProperty>(),
-                                                                             typeof(ComplexClassWithAdditionalProperty).GetRuntimeProperties());
+            var obj = dbReader.MapObject<ComplexClassWithAdditionalProperty>(dbReader.GetSchema<ComplexClassWithAdditionalProperty>());
 
             Assert.AreEqual("string", obj.lowercase);
             Assert.AreEqual(12, obj.mIxEdCaSe);
@@ -276,8 +275,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             A.CallTo(() => dbReader.GetValue(1)).Returns("12");
             A.CallTo(() => dbReader.GetValue(2)).Returns(true);
 
-            Assert.Throws<System.ArgumentException>(() => dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>(), 
-                                                                                           typeof(ComplexClass).GetRuntimeProperties()));
+            Assert.Throws<System.ArgumentException>(() => dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>()));
         }
 
         #endregion
