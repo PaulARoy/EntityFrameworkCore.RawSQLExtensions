@@ -16,8 +16,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             if (typeof(T).IsTupleType())
             {
                 var props = typeof(T).GetRuntimeFields();
-                valuePairs = dr.GetColumnSchema()
-               .Where(x => props.Any(y => y.Name.ToLower() == x.ColumnName.ToLower()))
+                valuePairs = dr.GetColumnSchema()          
                .ToDictionary(key => key.ColumnName.ToLower());
             }
            else
@@ -41,20 +40,15 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 T obj = Activator.CreateInstance<T>();
                 if (typeof(T).IsTupleType())
                 {
-                    var fields = typeof(T).GetRuntimeFields();
-                    foreach (var prop in fields)
+                    var fields = typeof(T).GetRuntimeFields().ToArray();
+                    //https://stackoverflow.com/questions/59000557/valuetuple-set-fields-via-reflection
+                    object xobj = obj;
+                    for (int i = 0; i < fields.Length; i++)
                     {
-                        var propName = prop.Name.ToLower();
-                        if (colMapping.ContainsKey(propName))
-                        {
-                            var val = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
-                            prop.SetValue(obj, val == DBNull.Value ? null : val);
-                        }
-                        else
-                        {
-                            prop.SetValue(obj, null);
-                        }
+                        var val = Convert.ChangeType(dr.GetValue(i), fields[i].FieldType);
+                       fields[i].SetValue(xobj, val == DBNull.Value ? null : val);
                     }
+                    obj = (T)Convert.ChangeType( xobj,typeof(T));
                 }
                 else
                 {
