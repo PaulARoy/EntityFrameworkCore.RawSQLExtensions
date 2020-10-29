@@ -55,10 +55,17 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                     IEnumerable<PropertyInfo> props = typeof(T).GetRuntimeProperties();
                     foreach (var prop in props)
                     {
+
                         var propName = prop.Name.ToLower();
                         if (colMapping.ContainsKey(propName))
                         {
                             var val = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
+
+                            var type = Nullable.GetUnderlyingType(prop.PropertyType);
+                            if (type != null && type.IsEnum)
+                            {
+                                val = val == DBNull.Value ? null : Enum.ToObject(type, val);
+                            }
                             prop.SetValue(obj, val == DBNull.Value ? null : val);
                         }
                         else
