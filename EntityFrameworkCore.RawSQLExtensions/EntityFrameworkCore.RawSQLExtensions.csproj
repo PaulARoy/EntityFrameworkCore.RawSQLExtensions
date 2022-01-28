@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Paul Roy</Authors>
     <PackageLicenseUrl></PackageLicenseUrl>
@@ -12,22 +12,45 @@
     <Description>Extensions to support raw SQL and stored procedures with custom entities mapping</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>1.1.2</Version>
-    <Copyright>Copyright ©2019 Paul Roy</Copyright>
+    <Copyright>Copyright ©2019-2022  Paul Roy</Copyright>
     <PackageTags>entity framework entityframework core raw sql procedure query efcore</PackageTags>
     <PackageIconUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions/EntityFrameworkCore.RawSQLExtensions/nuget_icon.png</PackageIconUrl>
-    <RepositoryType>Integrating maikebing pull request</RepositoryType>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
-
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.*" />
   </ItemGroup>
-
+	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.*" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.*" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="nuget_icon.png" />
+	</ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="nuget_icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
   
