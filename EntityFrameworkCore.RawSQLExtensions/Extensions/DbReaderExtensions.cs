@@ -173,7 +173,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 while (await dr.ReadAsync())
                     return dr.MapObject<T>(colMapping);
 
-            return default(T);
+            return default;
         }
 
         public static T FirstOrDefault<T>(this DbDataReader dr)
@@ -183,14 +183,14 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 while (dr.Read())
                     return dr.MapObject<T>(colMapping);
 
-            return default(T);
+            return default;
         }
 
         public static async Task<T> SingleOrDefaultAsync<T>(this DbDataReader dr)
         {
             var colMapping = dr.GetSchema<T>();
 
-            T obj = default(T);
+            T obj = default;
             bool hasResult = false;
 
             if (dr.HasRows)
@@ -209,7 +209,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
         public static T SingleOrDefault<T>(this DbDataReader dr)
         {
             var colMapping = dr.GetSchema<T>();
-            T obj = default(T);
+            T obj = default;
             bool hasResult = false;
 
             if (dr.HasRows)
