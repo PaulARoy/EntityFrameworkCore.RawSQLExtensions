@@ -3,6 +3,7 @@ using FakeItEasy;
 using NUnit.Framework;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Reflection;
 namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
@@ -26,6 +27,14 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
     public class ComplexClassWithAdditionalProperty : ComplexClass
     {
         public string AdditionalProperty { get; set; }
+    }
+
+    public class NotMappedPropertyClass
+    {
+        public string firstProperty { get; set; }
+
+        [NotMapped]
+        public string secondProperty { get; set; }
     }
 
     [TestFixture]
@@ -278,6 +287,24 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
             Assert.Throws<System.ArgumentException>(() => dbReader.MapObject<ComplexClass>(dbReader.GetSchema<ComplexClass>()));
         }
 
+        [Test]
+        public void MapObjectMapSkipNotMappedProperties()
+        {
+            var dbReader = A.Fake<DbDataReader>(opts => opts.Implements<IDbColumnSchemaGenerator>());
+            var dataColumn = new ReadOnlyCollection<DbColumn>(
+                new DbColumn[] {
+                    new CustomDbColumn(nameof(NotMappedPropertyClass.firstProperty).ToLower(), 0),
+                    new CustomDbColumn(nameof(NotMappedPropertyClass.secondProperty).ToLower(), 0),
+                });
+
+            A.CallTo(() => ((IDbColumnSchemaGenerator)dbReader).GetColumnSchema()).Returns(dataColumn);
+            A.CallTo(() => dbReader.GetValue(0)).Returns("string");
+
+            var obj = dbReader.MapObject<NotMappedPropertyClass>(dbReader.GetSchema<NotMappedPropertyClass>());
+            Assert.AreEqual("string", obj.firstProperty);
+            Assert.AreEqual(null, obj.secondProperty);
+        }
+
         #endregion
 
         #region "ToListAsync, FirstOrDefaultAsync, SingleOrDefaultAsync"
@@ -286,7 +313,29 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 
         #endregion
 
+        #region "Not Mapped Property"
+
+        [Test]
+        public void GetSchemaFromNotMappedClass()
+        {
+            var dbReader = A.Fake<DbDataReader>(opts => opts.Implements<IDbColumnSchemaGenerator>());
+            var dataColumn = new ReadOnlyCollection<DbColumn>(
+                new DbColumn[] {
+                    new CustomDbColumn(nameof(NotMappedPropertyClass.firstProperty)),
+                    new CustomDbColumn(nameof(NotMappedPropertyClass.secondProperty)),
+                });
+            A.CallTo(() => ((IDbColumnSchemaGenerator)dbReader).GetColumnSchema()).Returns(dataColumn);
+
+            var schema = dbReader.GetSchema<NotMappedPropertyClass>();
+            Assert.IsTrue(schema.ContainsKey(nameof(NotMappedPropertyClass.firstProperty).ToLower()));
+            Assert.IsFalse(schema.ContainsKey(nameof(NotMappedPropertyClass.secondProperty).ToLower()));
+            Assert.AreEqual(schema.Keys.Count, 1);
+        }
+
         #endregion
+
+        #endregion
+
         [Test]
         public void  ReadValueFromTulp()
         {

@@ -1,6 +1,7 @@
 ﻿using EntityFrameworkCore.RawSQLExtensions.Options;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -18,14 +19,14 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             {
                 var props = typeof(T).GetRuntimeFields();
                 valuePairs = dr.GetColumnSchema()          
-               .ToDictionary(key => key.ColumnName.ToLower());
+                               .ToDictionary(key => key.ColumnName.ToLower());
             }
            else
             {
-                var props = typeof(T).GetRuntimeProperties();
+                var props = GetRuntimeProperties<T>();
                 valuePairs = dr.GetColumnSchema()
-               .Where(x => props.Any(y => y.Name.ToLower() == x.ColumnName.ToLower()))
-               .ToDictionary(key => key.ColumnName.ToLower());
+                               .Where(x => props.Any(y => y.Name.ToLower() == x.ColumnName.ToLower()))
+                               .ToDictionary(key => key.ColumnName.ToLower());
             }
             return valuePairs;
         }
@@ -62,7 +63,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 }
                 else
                 {
-                    IEnumerable<PropertyInfo> props = typeof(T).GetRuntimeProperties();
+                    IEnumerable<PropertyInfo> props = GetRuntimeProperties<T>();
                     foreach (var prop in props)
                     {
 
@@ -222,6 +223,13 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 }
 
             return obj;
+        }
+
+        private static IEnumerable<PropertyInfo> GetRuntimeProperties<T>()
+        {
+            var props = typeof(T).GetRuntimeProperties();
+            return props.Where(p => !p.CustomAttributes.Any(ca => ca.AttributeType == typeof(NotMappedAttribute)))
+                                     .ToList();
         }
     }
 }
