@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityFrameworkCore.RawSQLExtensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -33,7 +34,16 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
         {
             if (typeof(T).IsSqlSimpleType())
             {
-                return (T)dr.GetValue(0);
+                var dbValue = dr.GetValue(0);
+
+                if (RawSQLExtensionsOptions.AllowStringGuidConversion && 
+                    typeof(T) == typeof(Guid) && dbValue is string dbStringValue)
+                {
+                    object obj = new Guid(dbStringValue); // case when db is string and property is Guid
+                    return (T)obj;
+                }
+
+                return (T)dbValue;
             }
             else
             {
@@ -48,7 +58,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                         var val = Convert.ChangeType(dr.GetValue(i), fields[i].FieldType);
                        fields[i].SetValue(xobj, val == DBNull.Value ? null : val);
                     }
-                    obj = (T)Convert.ChangeType( xobj,typeof(T));
+                    obj = (T)Convert.ChangeType(xobj, typeof(T));
                 }
                 else
                 {
@@ -59,14 +69,23 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                         var propName = prop.Name.ToLower();
                         if (colMapping.ContainsKey(propName))
                         {
-                            var val = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
+                            var dbValue = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
 
                             var type = Nullable.GetUnderlyingType(prop.PropertyType);
                             if (type != null && type.IsEnum)
                             {
-                                val = val == DBNull.Value ? null : Enum.ToObject(type, val);
+                                dbValue = dbValue == DBNull.Value ? null : Enum.ToObject(type, dbValue);
                             }
-                            prop.SetValue(obj, val == DBNull.Value ? null : val);
+
+                            if (RawSQLExtensionsOptions.AllowStringGuidConversion && 
+                                prop.PropertyType == typeof(Guid) && dbValue is string dbStringValue)
+                            {
+                                prop.SetValue(obj, new Guid(dbStringValue)); // case when db is string and property is Guid
+                            }
+                            else
+                            {
+                                prop.SetValue(obj, dbValue == DBNull.Value ? null : dbValue);
+                            }
                         }
                         else
                         {
