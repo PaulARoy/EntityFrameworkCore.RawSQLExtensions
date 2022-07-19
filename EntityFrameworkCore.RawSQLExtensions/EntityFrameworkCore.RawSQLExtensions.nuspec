@@ -9,18 +9,18 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <license type="expression">MIT</license>
         <projectUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions</projectUrl>
-        <iconUrl>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions/EntityFrameworkCore.RawSQLExtensions/nuget_icon.png</iconUrl>
+        <icon>https://github.com/PaulARoy/EntityFrameworkCore.RawSQLExtensions/EntityFrameworkCore.RawSQLExtensions/nuget_icon.png</iconUrl>
         <description>Add several extensions to support raw SQL with EntityFrameworkCore. Including raw SQL queries and stored procedures with basic type and custom entities mapping</description>
         <summary>Extensions to support raw SQL and stored procedures with custom entities mapping</summary>
         <releaseNotes>Integrating maikebing pull request</releaseNotes>
         <copyright>Copyright ©2022 Paul Roy</copyright>
         <tags>entity framework entityframework core raw sql procedure query efcore</tags>
         <dependencies>
-			<group targetFramework="net5.0">
+			<group targetFramework=".net 5.0">
 				<dependency id="Microsoft.EntityFrameworkCore" version="5.0.17" />
 				<dependency id="Microsoft.EntityFrameworkCore.Relational" version="5.0.17" />^
 			</group>
-			<group targetFramework="net6.0">
+			<group targetFramework=".net 6.0">
 				<dependency id="Microsoft.EntityFrameworkCore" version="6.0.7" />
 				<dependency id="Microsoft.EntityFrameworkCore.Relational" version="6.0.7" />
 			</group>
