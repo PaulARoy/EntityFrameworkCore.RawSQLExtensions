@@ -10,12 +10,13 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 t = Nullable.GetUnderlyingType(type);
 
-            return t.IsPrimitive || t.Equals(typeof(string)) ||
+            return t.IsPrimitive || t.Equals(typeof(string)) || t.Equals(typeof(decimal)) ||
                    t.Equals(typeof(DateTime)) || t.Equals(typeof(DateTimeOffset)) || t.Equals(typeof(TimeSpan)) ||
                    t.Equals(typeof(Guid)) ||
                    t.Equals(typeof(byte[])) || t.Equals(typeof(char[]));
         }
-        public static bool IsTupleType(this  Type type, bool checkBaseTypes = false)
+
+        public static bool IsTupleType(this Type type, bool checkBaseTypes = false)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
@@ -24,7 +25,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 return true;
             if (type == typeof(ValueTuple))
                 return true;
-       
+
             while (type != null)
             {
                 if (type.IsGenericType)
