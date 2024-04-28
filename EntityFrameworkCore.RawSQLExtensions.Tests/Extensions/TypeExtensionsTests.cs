@@ -1,12 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
 using EntityFrameworkCore.RawSQLExtensions.Extensions;
-using System;
+using NUnit.Framework;
 
 namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
 {
-    public class SimpleClass
-    {
-    }
+    public class SimpleClass { }
 
     [TestFixture]
     public class TypeExtensionsTests
@@ -22,6 +20,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
         [TestCase(typeof(ulong), true)]
         [TestCase(typeof(char), true)]
         [TestCase(typeof(float), true)]
+        [TestCase(typeof(decimal), true)]
         [TestCase(typeof(bool), true)]
         [TestCase(typeof(string), true)]
         [TestCase(typeof(DateTime), true)]
@@ -40,6 +39,7 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
         [TestCase(typeof(ulong?), true)]
         [TestCase(typeof(char?), true)]
         [TestCase(typeof(float?), true)]
+        [TestCase(typeof(decimal?), true)]
         [TestCase(typeof(bool?), true)]
         [TestCase(typeof(DateTime?), true)]
         [TestCase(typeof(DateTimeOffset?), true)]
@@ -55,8 +55,8 @@ namespace EntityFrameworkCore.RawSQLExtensions.Tests.Extensions
         [Test]
         [TestCase(typeof(object), false)]
         [TestCase(typeof(SimpleClass), false)]
-        [TestCase(typeof((string x,string y,int z)), true)]
-        [TestCase(typeof((string x,DateTime dt)), true)]
+        [TestCase(typeof((string x, string y, int z)), true)]
+        [TestCase(typeof((string x, DateTime dt)), true)]
         public void ExpectedIsTupleType(Type type, bool expectedResult)
         {
             Assert.AreEqual(expectedResult, type.IsTupleType());

@@ -10,10 +10,15 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 t = Nullable.GetUnderlyingType(type);
 
-            return t.IsPrimitive || t.Equals(typeof(string)) || t.Equals(typeof(decimal)) ||
-                   t.Equals(typeof(DateTime)) || t.Equals(typeof(DateTimeOffset)) || t.Equals(typeof(TimeSpan)) ||
-                   t.Equals(typeof(Guid)) ||
-                   t.Equals(typeof(byte[])) || t.Equals(typeof(char[]));
+            return t.IsPrimitive
+                || t.Equals(typeof(string))
+                || t.Equals(typeof(decimal))
+                || t.Equals(typeof(DateTime))
+                || t.Equals(typeof(DateTimeOffset))
+                || t.Equals(typeof(TimeSpan))
+                || t.Equals(typeof(Guid))
+                || t.Equals(typeof(byte[]))
+                || t.Equals(typeof(char[]));
         }
 
         public static bool IsTupleType(this Type type, bool checkBaseTypes = false)
@@ -31,7 +36,8 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                 if (type.IsGenericType)
                 {
                     var genType = type.GetGenericTypeDefinition();
-                    if (genType == typeof(Tuple<>)
+                    if (
+                        genType == typeof(Tuple<>)
                         || genType == typeof(Tuple<,>)
                         || genType == typeof(Tuple<,,>)
                         || genType == typeof(Tuple<,,,>)
@@ -39,17 +45,20 @@ namespace EntityFrameworkCore.RawSQLExtensions.Extensions
                         || genType == typeof(Tuple<,,,,,>)
                         || genType == typeof(Tuple<,,,,,,>)
                         || genType == typeof(Tuple<,,,,,,,>)
-                        || genType == typeof(Tuple<,,,,,,,>))
+                        || genType == typeof(Tuple<,,,,,,,>)
+                    )
                         return true;
-                    if (genType == typeof(ValueTuple<>)
-                      || genType == typeof(ValueTuple<,>)
-                      || genType == typeof(ValueTuple<,,>)
-                      || genType == typeof(ValueTuple<,,,>)
-                      || genType == typeof(ValueTuple<,,,,>)
-                      || genType == typeof(ValueTuple<,,,,,>)
-                      || genType == typeof(ValueTuple<,,,,,,>)
-                      || genType == typeof(ValueTuple<,,,,,,,>)
-                      || genType == typeof(ValueTuple<,,,,,,,>))
+                    if (
+                        genType == typeof(ValueTuple<>)
+                        || genType == typeof(ValueTuple<,>)
+                        || genType == typeof(ValueTuple<,,>)
+                        || genType == typeof(ValueTuple<,,,>)
+                        || genType == typeof(ValueTuple<,,,,>)
+                        || genType == typeof(ValueTuple<,,,,,>)
+                        || genType == typeof(ValueTuple<,,,,,,>)
+                        || genType == typeof(ValueTuple<,,,,,,,>)
+                        || genType == typeof(ValueTuple<,,,,,,,>)
+                    )
                         return true;
                 }
 
