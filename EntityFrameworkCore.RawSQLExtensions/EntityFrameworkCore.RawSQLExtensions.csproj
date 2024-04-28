@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<Title>EntityFrameworkCore Raw SQL Extensions</Title>
     <Authors>Paul Roy</Authors>
@@ -12,11 +12,15 @@
     <Company>Paul Roy</Company>
     <Description>Extensions to support Raw SQL and Stored Procedures with custom entities mapping</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>1.2.0</Version>
+    <Version>8.0.0</Version>
     <Copyright>Copyright ©2019-2022  Paul Roy</Copyright>
     <PackageTags>entity framework entityframework core raw sql procedure query efcore</PackageTags>
     <PackageIcon>nuget_icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+	
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
@@ -49,7 +53,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NuGet.CommandLine" Version="6.2.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
+    <PackageReference Include="NuGet.CommandLine" Version="6.9.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

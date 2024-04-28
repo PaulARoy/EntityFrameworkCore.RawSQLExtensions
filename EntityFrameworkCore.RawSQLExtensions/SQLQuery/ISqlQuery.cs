@@ -2,32 +2,31 @@
 using System.Data;
 using System.Threading.Tasks;
 
-namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery
+namespace EntityFrameworkCore.RawSQLExtensions.SqlQuery;
+
+public interface ISqlQuery<T>
 {
-    public interface ISqlQuery<T>
-    {
-        Task<IList<T>> ToListAsync();
+    Task<IList<T>> ToListAsync();
 
-        Task<T> FirstAsync();
+    Task<T> FirstAsync();
 
-        Task<T> FirstOrDefaultAsync();
+    Task<T> FirstOrDefaultAsync();
 
-        Task<T> SingleAsync();
+    Task<T> SingleAsync();
 
-        Task<T> SingleOrDefaultAsync();
+    Task<T> SingleOrDefaultAsync();
 
-        IList<T> ToList();
+    IList<T> ToList();
 
-        T First();
+    T First();
 
-        T FirstOrDefault();
+    T FirstOrDefault();
 
-        T Single();
+    T Single();
 
-        T SingleOrDefault();
+    T SingleOrDefault();
 
-        DataTable ToDataTable();
+    DataTable ToDataTable();
 
-        Task<DataTable> ToDataTableAsync();
-    }
+    Task<DataTable> ToDataTableAsync();
 }
