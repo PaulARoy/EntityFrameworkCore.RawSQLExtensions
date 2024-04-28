@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<Title>EntityFrameworkCore Raw SQL Extensions</Title>
     <Authors>Paul Roy</Authors>
@@ -13,6 +13,7 @@
     <Description>Extensions to support Raw SQL and Stored Procedures with custom entities mapping</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>8.0.0</Version>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
     <Copyright>Copyright ©2019-2022  Paul Roy</Copyright>
     <PackageTags>entity framework entityframework core raw sql procedure query efcore</PackageTags>
     <PackageIcon>nuget_icon.png</PackageIcon>
@@ -23,26 +24,34 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.*" />
-  </ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.*" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.*" />
-	</ItemGroup>
+      <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.*" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.*" />
+      </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+	    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.*" />
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.*" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.*" />
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.*" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+	    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.*" />
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.*" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+	    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.*" />
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.*" />
+    </ItemGroup>
 	<ItemGroup>
 	  <Content Include="nuget_icon.png" />
 	</ItemGroup>
@@ -51,10 +60,9 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+	  <None Include="..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
     <PackageReference Include="NuGet.CommandLine" Version="6.9.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

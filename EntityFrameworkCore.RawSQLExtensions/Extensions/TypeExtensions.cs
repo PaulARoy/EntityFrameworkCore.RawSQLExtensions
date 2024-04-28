@@ -23,7 +23,8 @@ public static class TypeExtensions
 
     public static bool IsTupleType(this Type type, bool checkBaseTypes = false)
     {
-        ArgumentNullException.ThrowIfNull(type);
+        if (type == null)
+            throw new ArgumentNullException(nameof(type));
 
         if (type == typeof(Tuple))
             return true;
